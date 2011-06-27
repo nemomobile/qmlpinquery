@@ -39,26 +39,68 @@ Item
         entry.removeChar()
     }
 
+    function setEntry(pinType)
+    {
+        parent.pinType = pinType;
+
+        if (pinType == 'puk')
+            {
+            entry = pukEntry;
+            entry.placeHolderText = pukEntry.stepOneText
+            changeTimer.start();
+            }
+        else if (pinType == 'newpin')
+            {
+            entry = pukEntry;
+            entry.placeHolderText = pukEntry.stepTwoText;
+            entry.clear();
+            }
+        else if (pinType == 'confirm')
+            {
+            entry = pukEntry;
+            entry.placeHolderText = pukEntry.stepThreeText;
+            entry.clear();
+            }
+        else
+            {
+            entry = pinEntry;
+            pinEntry.visible = true;
+            pukEntry.visible = false;
+            }
+    }
+
     Timer {
-        id : timer;
+        id : quitTimer;
         interval: 1000;
         running: false;
         repeat: false;
         onTriggered: Qt.quit();
     }
 
+    Timer {
+        id : changeTimer;
+        interval: 1500;
+        running: false;
+        repeat: false;
+        onTriggered: {pukEntry.visible = true; pinEntry.visible = false;}
+    }
+
     Connections {
         target: ofonoSimIf
 
         onPinOk : {
+            entry.placeHolderText = '';
             entry.succeeded();
-            timer.start();
+            quitTimer.start();
         }
         onPinFailed : {
             entry.failed(attemptsLeft);
         }
         onPinNotRequired : {
             entry.notRequired();
+        }
+        onPinTypeChanged : {
+            setEntry(pinType);
         }
     }
 

@@ -24,10 +24,36 @@ import QtQuick 1.0
 Page
 {
     id: pinPage
+    property string pinType: ofonoSimIf.pinType()
 
     PinEntry
     {
         id: pinEntry
+        visible: true
+        placeHolderText: 'Enter PIN code'
+        errorText: 'Incorrect PIN code'
+        okText: 'PIN code correct'
+        anchors {
+            top: parent.top
+            bottom: numPad.top
+            left: parent.left
+            right: parent.right
+            margins: 10
+        }
+    }
+
+    PinEntry
+    {
+        id: pukEntry
+        visible: false
+        placeHolderText: 'Enter PUK code'
+        errorText: 'Resetting PIN code failed'
+        okText: 'PIN code resetted successfully'
+
+        property string stepOneText: 'Enter PUK code'
+        property string stepTwoText: 'Enter new pin code'
+        property string stepThreeText: 'Re-enter new pin code'
+
         anchors {
             top: parent.top
             bottom: numPad.top
@@ -42,6 +68,7 @@ Page
         id: numPad
         width: parent.width
         anchors {bottom: parent.bottom; right: parent.right}
-        entry: pinEntry
+        entry: setEntry(pinPage.pinType)
+
     }
 }

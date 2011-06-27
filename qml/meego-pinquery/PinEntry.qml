@@ -25,9 +25,9 @@ Item
 {
     id: pinEntry
 
-    property string placeHolderText: 'Enter PIN code'
-    property string errorText: 'Incorrect PIN code'
-    property string okText: 'PIN code correct'
+    property string placeHolderText: ''
+    property string errorText: ''
+    property string okText: ''
     property string notRequiredText: 'PIN not required'
     property TextInput textInput: input
 
@@ -48,9 +48,11 @@ Item
     function failed(attemptsLeft)
     {
         input.text = errorText;
-        input.text += ' (';
-        input.text += attemptsLeft.toString();
-        input.text += ' attempts left)';
+        if (attemptsLeft > 0) {
+            input.text += ' (';
+            input.text += attemptsLeft.toString();
+            input.text += ' attempts left)';
+        }
         input.state = "ErrorMsg";
         timer.start();
     }

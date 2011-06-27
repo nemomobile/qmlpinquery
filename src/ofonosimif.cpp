@@ -22,12 +22,14 @@
 #include <QtDebug>
 #include "ofonosimif.h"
 
-#define PIN_RETRIES 3
+#define RETRIES_PIN 3
+#define RETRIES_PUK 10
 
 OfonoSimIf::OfonoSimIf() :
     m_simManager(0),
     m_pinRequired(false),
-    m_attemptsLeft(PIN_RETRIES)
+    m_attemptsLeft(RETRIES_PIN),
+    m_pinType("none")
 {
 }
 
@@ -39,6 +41,12 @@ void OfonoSimIf::startup()
 
     if (m_simManager->pinRequired() == QString("pin")) {
         m_pinRequired = true;
+        m_pinType = QString("pin");
+        m_attemptsLeft = RETRIES_PIN;
+    } if (m_simManager->pinRequired() == QString("puk")) {
+        m_pinRequired = true;
+        m_pinType = QString("puk");
+        m_attemptsLeft = RETRIES_PUK;
     }
 
     //OfonoPinRetries retries = m_simManager->pinRetries();
@@ -48,6 +56,7 @@ void OfonoSimIf::startup()
     //}
 
     connect(m_simManager, SIGNAL(enterPinComplete(bool)), this, SLOT(enterPinComplete(bool)));
+    connect(m_simManager, SIGNAL(resetPinComplete(bool)), this, SLOT(resetPinComplete(bool)));
     connect(m_simManager, SIGNAL(pinRequiredChanged(const QString&)), this, SLOT(pinRequiredChanged(const QString&)));
     //connect(m_simManager, SIGNAL(pinRetriesChanged(const OfonoPinRetries&)), this, SLOT(pinRetriesChanged(const OfonoPinRetries&)));
 
@@ -65,6 +74,7 @@ void OfonoSimIf::startup()
         qDebug() << m_simManager->errorName();
         qDebug() << m_simManager->errorMessage();
     }
+
     qDebug() << QString("<--OfonoSimIf::startup");
 }
 
@@ -89,10 +99,36 @@ void OfonoSimIf::enterPin(QString pinCode)
         startup();
     }
 
-    qDebug() << QString("pin") << pinCode;
+    qDebug() << QString("pinCode") << pinCode;
 
     if (pinRequired()) {
-        m_simManager->enterPin(QString("pin"), pinCode);
+        if (m_pinType == QString("pin")) {
+            m_simManager->enterPin(m_pinType, pinCode);
+
+        } else if (m_pinType == QString("puk")) {
+            m_pinType = QString("newpin");
+            m_pukInfo.m_puk = pinCode;
+            emit pinTypeChanged(m_pinType);
+
+        } else if (m_pinType == QString("newpin")) {
+            m_pinType = QString("confirm");
+            m_pukInfo.m_newpin = pinCode;
+            emit pinTypeChanged(m_pinType);
+
+        } else if (m_pinType == QString("confirm")) {
+            if (m_pukInfo.m_newpin == pinCode) {
+                m_simManager->resetPin(QString("puk"), m_pukInfo.m_puk, pinCode);
+            } else {
+                // change from confirm to puk
+                m_pinType = QString("puk");
+                emit pinTypeChanged(m_pinType);
+                emit pinFailed(m_attemptsLeft);
+            }
+
+            m_pukInfo.reset();
+        }
+
+        qDebug() << QString("m_pinType") << m_pinType;
     } else {
         emit pinNotRequired();
     }
@@ -102,6 +138,11 @@ void OfonoSimIf::enterPin(QString pinCode)
 int OfonoSimIf::attemptsLeft()
 {
     return m_attemptsLeft;
+}
+
+QString OfonoSimIf::pinType()
+{
+    return m_pinType;
 }
 
 void OfonoSimIf::enterPinComplete(bool success)
@@ -115,7 +156,9 @@ void OfonoSimIf::enterPinComplete(bool success)
         if (m_attemptsLeft > 0) {
             m_attemptsLeft--;
         }
+
         emit pinFailed(m_attemptsLeft);
+
         qDebug() << m_simManager->errorName();
         qDebug() << m_simManager->errorMessage();
     }
@@ -123,15 +166,50 @@ void OfonoSimIf::enterPinComplete(bool success)
     qDebug() << QString("<--OfonoSimIf::enterPinComplete");
 }
 
+void OfonoSimIf::resetPinComplete(bool success)
+{
+    qDebug() << QString("-->OfonoSimIf::resetPinComplete");
+
+    if (success) {
+        emit pinOk();
+    } else {
+        // TODO: remove when retries are received from ofono-qt
+        if (m_attemptsLeft > 0) {
+            m_attemptsLeft--;
+        }
+
+        // change from confirm to puk
+        m_pinType = QString("puk");
+        emit pinTypeChanged(m_pinType);
+
+        emit pinFailed(m_attemptsLeft);
+        qDebug() << m_simManager->errorName();
+        qDebug() << m_simManager->errorMessage();
+    }
+
+    qDebug() << QString("<--OfonoSimIf::resetPinComplete");
+}
+
 void OfonoSimIf::pinRequiredChanged(const QString &pinType)
 {
+    qDebug() << QString("-->OfonoSimIf::pinRequiredChanged");
+
     if (pinType == QString("pin")) {
         m_pinRequired = true;
-        qDebug() << QString("OfonoSimIf::pinRequiredChanged: YES");
+        m_pinType = pinType;
+        m_attemptsLeft = RETRIES_PIN;
+        qDebug() << QString("OfonoSimIf::pinRequiredChanged: pin");
+    } else if (pinType == QString("puk")) {
+        m_pinRequired = true;
+        m_pinType = pinType;
+        m_attemptsLeft = RETRIES_PUK;
+        qDebug() << QString("OfonoSimIf::pinRequiredChanged: puk");
     } else {
         m_pinRequired = false;
         qDebug() << QString("OfonoSimIf::pinRequiredChanged: NO");
     }
+
+    emit pinTypeChanged(m_pinType);
 }
 
 //void OfonoSimIf::pinRetriesChanged(const OfonoPinRetries &pinRetries)
