@@ -19,83 +19,11 @@
 *
 */
 
-import QtQuick 1.0
-import QtMobility.sensors 1.1
+import QtQuick 1.1
+import com.nokia.meego 1.2
 
-Rectangle {
+PageStackWindow {
     id: window
-    height: 800
-    width: 480
-    state: "Landscape"
 
-    OrientationSensor {
-        id: orientation
-        active: true
-
-        onReadingChanged: {
-            if (reading.orientation == OrientationReading.TopUp)
-                window.state = "Portrait";
-            else if (reading.orientation == OrientationReading.TopDown)
-                window.state = "PortraitInverted";
-            else if (reading.orientation == OrientationReading.LeftUp)
-                window.state = "LandscapeInverted";
-            else if (reading.orientation == OrientationReading.RightUp)
-                window.state = "Landscape";
-            else if (reading.orientation == OrientationReading.FaceUp)
-                window.state = "Landscape";
-            else if (reading.orientation == OrientationReading.FaceDown)
-                window.state = "Landscape";
-            else
-                window.state = "";
-        }
-    }
-
-    PinPage {}
-
-    states: [
-        State {
-          name: "Landscape"
-          PropertyChanges {
-            target: window
-            rotation: 0
-            width: 800
-            height: 480
-            x: 0
-            y: 0
-          }
-        },
-        State {
-          name: "LandscapeInverted"
-          PropertyChanges {
-            target: window
-            rotation: 180
-            width: 800
-            height: 480
-            x: 0
-            y: 0
-          }
-        },
-        State {
-          name: "Portrait"
-          PropertyChanges {
-            target: window
-            rotation: 270
-            width: 480
-            height: 800
-            x: 160
-            y: -160
-          }
-        },
-        State {
-          name: "PortraitInverted"
-          PropertyChanges {
-            target: window
-            rotation: 90
-            width: 480
-            height: 800
-            x: 160
-            y: -160
-          }
-        }
-    ]
+    initialPage: Component { PinPage { } }
 }

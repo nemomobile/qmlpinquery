@@ -20,14 +20,13 @@
 */
 
 import QtQuick 1.0
+import com.nokia.meego 1.2
 
-Page
-{
+Page {
     id: pinPage
     property string pinType: ofonoSimIf.pinType()
 
-    PinEntry
-    {
+    PinEntry {
         id: pinEntry
         visible: true
         placeHolderText: 'Enter PIN code'
