@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
 
     OfonoSimIf *ofonoSimIf = new OfonoSimIf();
     context->setContextProperty("ofonoSimIf", ofonoSimIf);
+    view->setSource(QUrl("qml/qmlpinquery/main.qml"));
 
     if (ofonoSimIf->pinRequired() || startedFromDesktop) {
         viewer.setResizeMode(QDeclarativeView::SizeRootObjectToView);

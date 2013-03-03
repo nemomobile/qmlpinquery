@@ -1,5 +1,5 @@
 # Folders to ship with the application
-folder_01.source = qml/meego-pinquery
+folder_01.source = qml/qmlpinquery
 folder_01.target = qml
 DEPLOYMENTFOLDERS = folder_01
 
