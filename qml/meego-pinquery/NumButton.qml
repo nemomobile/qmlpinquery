@@ -19,57 +19,17 @@
 *
 */
 
-import QtQuick 1.0
+import QtQuick 1.1
+import com.nokia.meego 1.2
 
-Item
-{
+Button {
     id: numButton
-
-    property Item numpad
-
-    property string text: ""
     property string detail: ""
-
-    signal clicked
 
     width: parent.width / 3
     height: 72
 
-    SystemPalette { id: activePalette; colorGroup: SystemPalette.Active }
-
-    Rectangle
-    {
-        anchors {fill: parent; margins: 2}
-        color: activePalette.button
-        border {width: 1}
-        radius: width / 16
-
-        gradient: Gradient {
-            GradientStop {
-                position: 0.0
-                color: !mouseArea.pressed ? activePalette.light : activePalette.button
-            }
-            GradientStop {
-                position: 1.0
-                color: !mouseArea.pressed ? activePalette.button : activePalette.dark
-            }
-        }
-    }
-
-    Text
-    {
-        width: parent.width
-        height: parent.height * 0.6
-        anchors {top: parent.top; margins: 4}
-        text: parent.text
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        font {pixelSize: parent.height / 2}
-        color: activePalette.buttonText
-    }
-
-    Text
-    {
+    Text {
         width: parent.width
         height: parent.height / 4
         anchors {bottom: parent.bottom; margins: 8}
@@ -77,13 +37,5 @@ Item
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font {pixelSize: parent.height / 4}
-        color: activePalette.dark
-    }
-
-    MouseArea
-    {
-        id: mouseArea
-        anchors.fill: parent
-        onClicked: numButton.clicked();
     }
 }
