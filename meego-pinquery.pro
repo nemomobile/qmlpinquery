@@ -15,10 +15,3 @@ include(src/src.pri)
 # Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()
-
-# To install autostart conf file
-autostart.path    = $$[QT_INSTALL_CONFIGURATION]/autostart
-autostart.files   += meego-pinquery-startup.desktop
-export(autostart.files)
-export(autostart.path)
-INSTALLS     += autostart
