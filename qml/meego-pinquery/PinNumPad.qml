@@ -19,7 +19,8 @@
 *
 */
 
-import QtQuick 1.0
+import QtQuick 1.1
+import com.nokia.meego 1.2
 
 Item
 {
@@ -103,8 +104,6 @@ Item
             setEntry(pinType);
         }
     }
-
-    SystemPalette { id: activePalette; colorGroup: SystemPalette.Active }
 
     Item
     {
@@ -204,17 +203,11 @@ Item
         width: parent.width; height: 74
         anchors {bottom: parent.bottom}
 
-        Rectangle
-        {
-            anchors.fill: parent
-            color: activePalette.window
-        }
-
         Item
         {
             anchors {fill: parent; margins: 4}
 
-            ToolButton {
+            Button {
                 id: emergencybutton;
                 anchors {left: parent.left}
                 width: parent.width / 4
@@ -222,15 +215,14 @@ Item
                 text: "+";
                 onClicked: console.log("Emergency calls are not supported");
             }
-            ToolButton {
+            Button {
                 id: okbutton;
                 anchors {left: emergencybutton.right; right: skipbutton.left; margins: 5}
                 height: parent.height
                 text: "OK";
-                background: '#99ff66' // light green
                 onClicked: if (entry.textInput.state == "Input") ofonoSimIf.enterPin(entry.textInput.text.toString());
             }
-            ToolButton {
+            Button {
                 id: skipbutton;
                 anchors {right: parent.right}
                 width: parent.width / 4
