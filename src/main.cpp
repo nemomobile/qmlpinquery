@@ -73,6 +73,7 @@ int main(int argc, char **argv)
         exit(0);
     }
 
+    QObject::connect(view->engine(), SIGNAL(quit()), application, SLOT(quit()));
     view->rootContext()->setContextProperty("ofonoSimIf", ofonoSimIf);
     view->setSource(QUrl("qrc:/qml/main.qml"));
 
