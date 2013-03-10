@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 
     if (!ofonoSimIf->pinRequired()) {
         delete ofonoSimIf;
-        exit(1);
+        exit(0);
     }
 
     view->rootContext()->setContextProperty("ofonoSimIf", ofonoSimIf);
