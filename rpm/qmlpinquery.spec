@@ -9,7 +9,7 @@ Name:       qmlpinquery
 # << macros
 
 Summary:    QML based PIN query application using ofono-qt
-Version:    0.1.0
+Version:    0.1.1
 Release:    1
 Group:      Applications/Communications
 License:    BSD
