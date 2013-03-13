@@ -5,5 +5,5 @@ Requires=dbus.socket xorg.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/meego-pinquery
+ExecStart=/usr/bin/qmlpinquery
 
