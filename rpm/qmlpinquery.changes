@@ -1,0 +1,36 @@
+* Wed Mar 13 2013 Robin Burchell <robin+mer@viroteck.net> - 0.1.1
+- Fix incorrect name in service file
+
+* Tue Mar 12 2013 Robin Burchell <robin+mer@viroteck.net> - 0.1.1
+- Fixes NEM#602: meego-pinquery returns 1 if pinquery isn't needed
+- Fix a regression: PIN query should quit when the QML asks it to
+
+* Mon Mar 04 2013 Robin Burchell <robin+mer@viroteck.net> - 0.1.0
+- Rename package to qmlpinquery
+- Change UI to use MeeGo components
+- Rewrite C++ and buildsystem a bit to more closely match other Nemo
+  applications, use best practices, and fix a leak
+
+* Tue Feb 05 2013 Bernd Wachter <bernd.wachter@jollamobile.com> - 0.0.2
+- Change service from 'oneshot' to 'simple' to avoid systemd killing the user session if no pin is entered
+
+* Thu Jan 10 2013 Marko Saukko <marko.saukko@jollamobile.com> - 0.0.2
+- Move Type to right section of service file.
+
+* Sun Sep 30 2012 Carsten Munk <carsten.munk@jollamobile.com> - 0.0.2
+- Add .service file for systemd user sessions
+
+* Thu Nov 03 2011 Marko Saukko <marko.saukko@cybercom.com> - 0.0.2
+- Added missing dependency to libdeclarative-sensors and removed manual ofono-qt dependency.
+
+* Fri Sep 30 2011 Marko Saukko <marko.saukko@cybercom.com> - 0.0.2
+- Executed newer spectacle and fixed some packaging warnings.
+
+* Mon Sep 12 2011 vnayani <ext-vijay.nayani@nokia.com> - 0.0.2
+- fix-the-Meego-pin-query-issue.patch: Fixes the meego pin query issue, (BMC#22279)
+
+* Mon Jun 27 2011 Sirpa Kemppainen <sirpa.h.kemppainen@nokia.com> - 0.0.2  
+- Added support for resetting SIM pin with PUK code.
+
+* Wed May 11 2011 Sirpa Kemppainen <sirpa.h.kemppainen@nokia.com> - 0.0.1  
+- Initial version of QML based MeeGo pin query UI.
