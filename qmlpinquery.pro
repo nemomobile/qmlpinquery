@@ -1,7 +1,6 @@
-PROJECT_NAME = qmlpinquery
 TEMPLATE = app
 CONFIG += ordered hide_symbols
-QT += declarative dbus
+QT += dbus
 TARGET = $$PROJECT_NAME
 CONFIG -= app_bundle # OS X
 
@@ -14,7 +13,22 @@ packagesExist(qdeclarative-boostable) {
 } else {
     warning("qdeclarative-boostable not available; startup times will be slower")
 }
-PKGCONFIG += ofono-qt
+
+equals(QT_MAJOR_VERSION, 4):  {
+    PKGCONFIG += qofono
+    QT += declarative
+    PROJECT_NAME = qmlpinquery
+    QML_FILES = qml/*.qml
+    JS_FILES = *qml/.js
+}
+
+equals(QT_MAJOR_VERSION, ):  {
+    PKGCONFIG += qofono-qt5
+    QT += qml
+    PROJECT_NAME = qmlpinquery-qt5
+    QML_FILES = qml2/*.qml
+    JS_FILES = *qml2/.js
+}
 
 SOURCES += src/main.cpp \
            src/ofonosimif.cpp
@@ -22,8 +36,6 @@ SOURCES += src/main.cpp \
 HEADERS += src/ofonosimif.h
 RESOURCES += res.qrc
 
-QML_FILES = qml/*.qml
-JS_FILES = *qml/.js
 
 OTHER_FILES += $${QML_FILES} $${JS_FILES}
 
@@ -50,3 +62,4 @@ dist.commands += tar jcpvf $${PROJECT_NAME}-$${VERSION}.tar.bz2 $${PROJECT_NAME}
 dist.commands += rm -fR $${PROJECT_NAME}-$${VERSION}
 QMAKE_EXTRA_TARGETS += dist
 
+OTHER_FILES += rpm/*

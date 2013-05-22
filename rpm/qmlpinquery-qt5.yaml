@@ -16,12 +16,12 @@ ExtraSources:
 Description: QML PIN query dialog
 
 PkgConfigBR:  
-     - qdeclarative-boostable
-     - QtCore >= 4.7.0  
-     - QtGui
-     - QtDBus
-     - QtDeclarative
-     - qofono >= 0.6
+#     - qdeclarative-boostable
+     - Qt5Core 
+     - Qt5Gui
+     - Qt5DBus
+     - Qt5Quick
+     - qofono-qt5 >= 0.6
 Requires : 
      - qt-components
 Configure: none  
