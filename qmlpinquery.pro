@@ -50,3 +50,5 @@ dist.commands += tar jcpvf $${PROJECT_NAME}-$${VERSION}.tar.bz2 $${PROJECT_NAME}
 dist.commands += rm -fR $${PROJECT_NAME}-$${VERSION}
 QMAKE_EXTRA_TARGETS += dist
 
+OTHER_FILES += rpm/*
+
