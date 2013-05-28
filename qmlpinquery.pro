@@ -14,7 +14,7 @@ packagesExist(qdeclarative-boostable) {
 } else {
     warning("qdeclarative-boostable not available; startup times will be slower")
 }
-PKGCONFIG += ofono-qt
+PKGCONFIG += qofono
 
 SOURCES += src/main.cpp \
            src/ofonosimif.cpp
