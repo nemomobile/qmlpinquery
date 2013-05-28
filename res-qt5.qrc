@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml2/main.qml</file>
+        <file>qml2/NumButton.qml</file>
+        <file>qml2/PinEntry.qml</file>
+        <file>qml2/PinNumPad.qml</file>
+        <file>qml2/PinPage.qml</file>
+    </qresource>
+</RCC>
