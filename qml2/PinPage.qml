@@ -19,59 +19,55 @@
 *
 */
 
-#ifndef OFONOSIMIF_H
-#define OFONOSIMIF_H
+import QtQuick 2.0
+import com.nokia.meego 1.2
 
-#include <QtCore/QObject>
-#include <qofonosimmanager.h>
+Page {
+    id: pinPage
+    property string pinType: ofonoSimIf.pinType()
 
-class PukInfo : public QObject
-{
-    Q_OBJECT
+    PinEntry {
+        id: pinEntry
+        visible: true
+        placeHolderText: 'Enter PIN code'
+        errorText: 'Incorrect PIN code'
+        okText: 'PIN code correct'
+        anchors {
+            top: parent.top
+            bottom: numPad.top
+            left: parent.left
+            right: parent.right
+            margins: 10
+        }
+    }
 
-public:
-    PukInfo() {};
-    void reset() { m_puk = QString(""); m_newpin = QString("");};
+    PinEntry
+    {
+        id: pukEntry
+        visible: false
+        placeHolderText: 'Enter PUK code'
+        errorText: 'Resetting PIN code failed'
+        okText: 'PIN code resetted successfully'
 
-public:
-    QString m_puk;
-    QString m_newpin;
-};
+        property string stepOneText: 'Enter PUK code'
+        property string stepTwoText: 'Enter new pin code'
+        property string stepThreeText: 'Re-enter new pin code'
 
-class OfonoSimIf : public QObject
-{
-    Q_OBJECT
+        anchors {
+            top: parent.top
+            bottom: numPad.top
+            left: parent.left
+            right: parent.right
+            margins: 10
+        }
+    }
 
-public:
-    OfonoSimIf();
-    bool pinRequired();
+    PinNumPad
+    {
+        id: numPad
+        width: parent.width
+        anchors {bottom: parent.bottom; right: parent.right}
+        entry: setEntry(pinPage.pinType)
 
-Q_SIGNALS:
-    void pinOk();
-    void pinFailed(int attemptsLeft);
-    void pinNotRequired();
-    void pinTypeChanged(QString pinType);
-
-public Q_SLOTS:
-    void enterPin(QString pinCode);
-    int attemptsLeft();
-    QString pinType(); // 'pin', 'puk', 'newpin', 'confirm'
-
-private slots:
-    void enterPinComplete(QOfonoSimManager::Error error, const QString &errorString);
-    void resetPinComplete(QOfonoSimManager::Error error, const QString &errorString);
-    void pinRequiredChanged(int pinType);
-    void pinRetriesChanged(const QVariantMap &pinRetries);
-
-private:
-    void startup();
-
-private:
-    QOfonoSimManager *m_simManager;
-    bool m_pinRequired;
-    int m_attemptsLeft;
-    QString m_pinType;
-    PukInfo m_pukInfo;
-};
-
-#endif // OFONOSIMIF_H
+    }
+}

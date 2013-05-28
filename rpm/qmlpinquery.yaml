@@ -21,7 +21,7 @@ PkgConfigBR:
      - QtGui
      - QtDBus
      - QtDeclarative
-     - ofono-qt
+     - ofono-qt >= 0.25
 Requires : 
      - qt-components
 Configure: none  

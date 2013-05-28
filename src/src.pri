@@ -8,4 +8,5 @@ HEADERS += $$PWD/ofonosimif.h
 
 INCLUDEPATH += $$PWD
 
-LIBS += /usr/lib/libqofono.so
+#LIBS += /usr/lib/libqofono.so
+
