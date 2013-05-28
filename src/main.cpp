@@ -30,14 +30,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#include <QtGui/QApplication>
-#include <QtDeclarative/QDeclarativeComponent>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeView>
+#include <QApplication>
 #include <QEvent>
 #include <QKeyEvent>
 #include <QDebug>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QtQml>
+#include <QQmlEngine>
+#include <QQmlExtensionPlugin>
+#include <QtQuick/QQuickView>
+#define QDeclarativeEngine QQmlEngine
+#define QDeclarativeExtensionPlugin QQmlExtensionPlugin
+#define QDeclarativeView QQuickView
+#else
+#include <QtDeclarative>
+#include <QDeclarativeEngine>
+#include <QDeclarativeExtensionPlugin>
+#endif
 
 // Header below is missing from MeeGo OBS
 //#include <QSystemScreenSaver>
