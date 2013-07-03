@@ -1,0 +1,32 @@
+Name: qmlpinquery-qt5
+Summary: QML based PIN query application using qofono
+Version: 0.1.3
+Release: 1
+Group: Applications/Communications
+License:  BSD
+URL: https://github.com/nemomobile/qmlpinquery
+Sources:  
+     - "%{name}-%{version}.tar.bz2"
+Provides:
+    - meego-pinquery > 0.0.2
+Obsoletes:
+    - meego-pinquery <= 0.0.2
+ExtraSources:
+     - qmlpinquery-qt5.service;%{_libdir}/systemd/user/
+Description: QML PIN query dialog
+
+PkgConfigBR:  
+#     - qdeclarative-boostable
+     - Qt5Core 
+     - Qt5Gui
+     - Qt5DBus
+     - Qt5Quick
+     - qofono-qt5 >= 0.6
+Requires : 
+     - qt-components
+Configure: none  
+Builder: qmake5
+Files:  
+     - "%{_bindir}/qmlpinquery-qt5"
+     - "%{_usr}/share/applications/qmlpinquery-qt5.desktop"
+     - "%{_libdir}/systemd/user/qmlpinquery-qt5.service"
