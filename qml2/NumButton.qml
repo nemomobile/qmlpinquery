@@ -19,59 +19,23 @@
 *
 */
 
-#ifndef OFONOSIMIF_H
-#define OFONOSIMIF_H
+import QtQuick 2.0
+import com.nokia.meego 1.2
 
-#include <QtCore/QObject>
-#include <qofonosimmanager.h>
+Button {
+    id: numButton
+    property string detail: ""
 
-class PukInfo : public QObject
-{
-    Q_OBJECT
+    width: parent.width / 3
+    height: 72
 
-public:
-    PukInfo() {};
-    void reset() { m_puk = QString(""); m_newpin = QString("");};
-
-public:
-    QString m_puk;
-    QString m_newpin;
-};
-
-class OfonoSimIf : public QObject
-{
-    Q_OBJECT
-
-public:
-    OfonoSimIf();
-    bool pinRequired();
-
-Q_SIGNALS:
-    void pinOk();
-    void pinFailed(int attemptsLeft);
-    void pinNotRequired();
-    void pinTypeChanged(QString pinType);
-
-public Q_SLOTS:
-    void enterPin(QString pinCode);
-    int attemptsLeft();
-    QString pinType(); // 'pin', 'puk', 'newpin', 'confirm'
-
-private slots:
-    void enterPinComplete(QOfonoSimManager::Error error, const QString &errorString);
-    void resetPinComplete(QOfonoSimManager::Error error, const QString &errorString);
-    void pinRequiredChanged(int pinType);
-    void pinRetriesChanged(const QVariantMap &pinRetries);
-
-private:
-    void startup();
-
-private:
-    QOfonoSimManager *m_simManager;
-    bool m_pinRequired;
-    int m_attemptsLeft;
-    QString m_pinType;
-    PukInfo m_pukInfo;
-};
-
-#endif // OFONOSIMIF_H
+    Text {
+        width: parent.width
+        height: parent.height / 4
+        anchors {bottom: parent.bottom; margins: 8}
+        text: parent.detail
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        font {pixelSize: parent.height / 4}
+    }
+}

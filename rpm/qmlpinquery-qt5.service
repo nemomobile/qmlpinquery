@@ -1,0 +1,9 @@
+[Unit]
+Description=Pin query app
+After=xorg.target
+Requires=dbus.socket xorg.target 
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/qmlpinquery-qt5
+
