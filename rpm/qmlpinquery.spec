@@ -18,8 +18,6 @@ Source100:  qmlpinquery.yaml
 Requires:   qt-components
 Requires:   systemd
 Requires:   systemd-user-session-targets
-Requires(post): /sbin/ldconfig
-Requires(postun): /sbin/ldconfig
 BuildRequires:  pkgconfig(qdeclarative-boostable)
 BuildRequires:  pkgconfig(QtCore) >= 4.7.0
 BuildRequires:  pkgconfig(QtGui)
@@ -68,7 +66,6 @@ ln -s ../qmlpinquery.service %{buildroot}%{_libdir}/systemd/user/user-session.ta
 
 
 %post
-/sbin/ldconfig
 # >> post
 if [ "$1" -ge 1 ]; then
 systemctl-user daemon-reload || :
@@ -77,7 +74,6 @@ fi
 # << post 
 
 %postun
-/sbin/ldconfig
  # >> postun
 if [ "$1" -eq 0 ]; then
 systemctl-user stop qmlpinquery.service || :
