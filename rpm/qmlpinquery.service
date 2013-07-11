@@ -4,8 +4,7 @@ After=pre-user-session.target
 Requires=dbus.socket
 
 [Service]
-Type=simple
-ExecStart=/usr/bin/qmlpinquery -systemd
+ExecStart=/usr/bin/qmlpinquery
 Restart=always
 
 [Install]
