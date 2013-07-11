@@ -24,6 +24,8 @@ PkgConfigBR:
      - ofono-qt
 Requires : 
      - qt-components
+     - systemd
+     - systemd-user-session-targets
 Configure: none  
 Builder: qmake    
 Files:  
