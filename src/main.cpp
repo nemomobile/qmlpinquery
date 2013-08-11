@@ -30,11 +30,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
  */
 
-#include <QtGui/QApplication>
-#include <QtDeclarative/QDeclarativeComponent>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeView>
+#include <QGuiApplication>
+#include <QQmlContext>
+#include <QQmlEngine>
+#include <QQuickView>
 #include <QEvent>
 #include <QKeyEvent>
 #include <QDebug>
@@ -45,7 +44,7 @@
 #include "ofonosimif.h"
 
 #ifdef HAS_BOOSTER
-#include <applauncherd/MDeclarativeCache>
+#include <MDeclarativeCache>
 #endif
 
 #ifdef HAS_BOOSTER
@@ -53,15 +52,19 @@ Q_DECL_EXPORT
 #endif
 int main(int argc, char **argv)
 {
-    QApplication *application;
-    QDeclarativeView *view;
+    QGuiApplication *application;
+    QQuickView *view;
 #ifdef HAS_BOOSTER
     application = MDeclarativeCache::qApplication(argc, argv);
-    view = MDeclarativeCache::qDeclarativeView();
+    application->setApplicationName("qmlpinquery");
+    application->setOrganizationName("org.nemomobile");
+    view = MDeclarativeCache::qQuickView();
 #else
     qWarning() << Q_FUNC_INFO << "Warning! Running without booster. This may be a bit slower.";
-    QApplication stackApp(argc, argv);
-    QDeclarativeView stackView;
+    QGuiApplication stackApp(argc, argv);
+    application->setApplicationName("qmlpinquery");
+    application->setOrganizationName("org.nemomobile");
+    QQuickView stackView;
     application = &stackApp;
     view = &stackView;
 #endif

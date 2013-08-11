@@ -1,6 +1,6 @@
 Name: qmlpinquery
 Summary: QML based PIN query application using ofono-qt
-Version: 0.1.1
+Version: 0.2
 Release: 1
 Group: Applications/Communications
 License:  BSD
@@ -16,16 +16,16 @@ ExtraSources:
 Description: QML PIN query dialog
 
 PkgConfigBR:  
-     - qdeclarative-boostable
-     - QtCore >= 4.7.0  
-     - QtGui
-     - QtDBus
-     - QtDeclarative
+     - qdeclarative5-boostable
+     - Qt5Core
+     - Qt5Qml
+     - Qt5Quick
+     - Qt5DBus
      - ofono-qt
 Requires : 
-     - qt-components
+     - qt-components-qt5
 Configure: none  
-Builder: qmake    
+Builder: qmake5
 Files:  
      - "%{_bindir}/qmlpinquery"
      - "%{_usr}/share/applications/qmlpinquery.desktop"
