@@ -9,7 +9,7 @@ Name:       qmlpinquery
 # << macros
 
 Summary:    QML based PIN query application using ofono-qt
-Version:    0.1.1
+Version:    0.2
 Release:    1
 Group:      Applications/Communications
 License:    BSD
@@ -17,12 +17,12 @@ URL:        https://github.com/nemomobile/qmlpinquery
 Source0:    %{name}-%{version}.tar.bz2
 Source1:    qmlpinquery.service
 Source100:  qmlpinquery.yaml
-Requires:   qt-components
-BuildRequires:  pkgconfig(qdeclarative-boostable)
-BuildRequires:  pkgconfig(QtCore) >= 4.7.0
-BuildRequires:  pkgconfig(QtGui)
-BuildRequires:  pkgconfig(QtDBus)
-BuildRequires:  pkgconfig(QtDeclarative)
+Requires:   qt-components-qt5
+BuildRequires:  pkgconfig(qdeclarative5-boostable)
+BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Qml)
+BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  pkgconfig(Qt5DBus)
 BuildRequires:  pkgconfig(ofono-qt)
 Provides:   meego-pinquery > 0.0.2
 Obsoletes:   meego-pinquery <= 0.0.2
@@ -41,7 +41,7 @@ QML PIN query dialog
 # >> build pre
 # << build pre
 
-%qmake 
+%qmake5
 
 make %{?jobs:-j%jobs}
 
@@ -52,7 +52,7 @@ make %{?jobs:-j%jobs}
 rm -rf %{buildroot}
 # >> install pre
 # << install pre
-%qmake_install
+%qmake5_install
 mkdir -p %{buildroot}%{_libdir}/systemd/user/
 cp -a %{SOURCE1} %{buildroot}%{_libdir}/systemd/user/
 

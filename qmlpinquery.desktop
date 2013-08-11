@@ -1,11 +1,8 @@
 [Desktop Entry]
-Encoding=UTF-8
-Version=1.0
 Type=Application
-Terminal=false
 Name=PIN Entry
-Exec=/usr/bin/qmlpinquery
+Categories=Applications;
+Exec=invoker --type=qtcomponents-qt5 -s /usr/bin/qmlpinquery
 Icon=qmlpinquery
-X-Window-Icon=
-X-HildonDesk-ShowInToolbar=false
-X-Osso-Type=application/x-executable
+
+X-Desktop-File-Install-Version=0.20
