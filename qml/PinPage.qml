@@ -19,8 +19,8 @@
 *
 */
 
-import QtQuick 1.0
-import com.nokia.meego 1.2
+import QtQuick 2.0
+import com.nokia.meego 2.0
 
 Page {
     id: pinPage
