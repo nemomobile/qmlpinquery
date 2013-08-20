@@ -24,6 +24,7 @@ PkgConfigBR:
      - ofono-qt
 Requires : 
      - qt-components-qt5
+     - mapplauncherd-booster-qtcomponents-qt5
 Configure: none  
 Builder: qmake5
 Files:  
