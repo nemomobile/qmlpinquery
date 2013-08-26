@@ -23,7 +23,7 @@
 #define OFONOSIMIF_H
 
 #include <QtCore/QObject>
-#include <ofono-qt/ofonosimmanager.h>
+#include <qofono-qt5/qofonosimmanager.h>
 
 class PukInfo : public QObject
 {
@@ -58,16 +58,16 @@ public Q_SLOTS:
     QString pinType(); // 'pin', 'puk', 'newpin', 'confirm'
 
 private slots:
-    void enterPinComplete(bool success);
-    void resetPinComplete(bool success);
-    void pinRequiredChanged(const QString &pinType);
+    void enterPinComplete(QOfonoSimManager::Error error, const QString &errorString);
+    void resetPinComplete(QOfonoSimManager::Error error, const QString &errorString);
+    void pinRequiredChanged(int pinType);
     //void pinRetriesChanged(const OfonoPinRetries &pinRetries);
 
 private:
     void startup();
 
 private:
-    OfonoSimManager *m_simManager;
+    QOfonoSimManager *m_simManager;
     bool m_pinRequired;
     int m_attemptsLeft;
     QString m_pinType;
