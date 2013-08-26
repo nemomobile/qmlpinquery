@@ -21,6 +21,8 @@
 
 #include <QtDebug>
 #include "ofonosimif.h"
+#include <qofono-qt5/qofonomanager.h>
+#include <qofono-qt5/qofonomodem.h>
 
 #define RETRIES_PIN 3
 #define RETRIES_PUK 10
@@ -37,13 +39,18 @@ void OfonoSimIf::startup()
 {
     qDebug() << QString("-->OfonoSimIf::startup");
 
-    m_simManager = new OfonoSimManager(OfonoModem::AutomaticSelect, "", this);
+    QOfonoManager ofonomanager;
+    QOfonoModem modem;
+    modem.setModemPath(ofonomanager.modems().at(0));
 
-    if (m_simManager->pinRequired() == QString("pin")) {
+    m_simManager = new QOfonoSimManager(this);
+    m_simManager->setModemPath(modem.modemPath());
+
+    if (m_simManager->pinRequired() == QOfonoSimManager::SimPin) {
         m_pinRequired = true;
         m_pinType = QString("pin");
         m_attemptsLeft = RETRIES_PIN;
-    } if (m_simManager->pinRequired() == QString("puk")) {
+    } if (m_simManager->pinRequired() == QOfonoSimManager::SimPuk) {
         m_pinRequired = true;
         m_pinType = QString("puk");
         m_attemptsLeft = RETRIES_PUK;
@@ -55,26 +62,22 @@ void OfonoSimIf::startup()
     //    m_attemptsLeft = retries["pin"];
     //}
 
-    connect(m_simManager, SIGNAL(enterPinComplete(bool)), this, SLOT(enterPinComplete(bool)));
-    connect(m_simManager, SIGNAL(resetPinComplete(bool)), this, SLOT(resetPinComplete(bool)));
-    connect(m_simManager, SIGNAL(pinRequiredChanged(const QString&)), this, SLOT(pinRequiredChanged(const QString&)));
+    connect(m_simManager, SIGNAL(enterPinComplete(QOfonoSimManager::Error,QString)), this, SLOT(enterPinComplete(QOfonoSimManager::Error,QString)));
+    connect(m_simManager, SIGNAL(resetPinComplete(QOfonoSimManager::Error,QString)), this, SLOT(resetPinComplete(QOfonoSimManager::Error,QString)));
+    connect(m_simManager, SIGNAL(pinRequiredChanged(int)), this, SLOT(pinRequiredChanged(int)));
     //connect(m_simManager, SIGNAL(pinRetriesChanged(const OfonoPinRetries&)), this, SLOT(pinRetriesChanged(const OfonoPinRetries&)));
 
-    if (m_simManager->modem()->isValid()) {
+    if (modem.isValid()) {
         qDebug() << QString("Modem ok");
 
-        if (!m_simManager->modem()->powered()) {
-            m_simManager->modem()->setPowered(true);
+        if (!modem.powered()) {
+            modem.setPowered(true);
         }
 
-        if (!m_simManager->modem()->online()) {
-            m_simManager->modem()->setOnline(true);
+        if (!modem.online()) {
+            modem.setOnline(true);
         }
-    } else {
-        qDebug() << m_simManager->errorName();
-        qDebug() << m_simManager->errorMessage();
     }
-
     qDebug() << QString("<--OfonoSimIf::startup");
 }
 
@@ -103,7 +106,7 @@ void OfonoSimIf::enterPin(QString pinCode)
 
     if (pinRequired()) {
         if (m_pinType == QString("pin")) {
-            m_simManager->enterPin(m_pinType, pinCode);
+            m_simManager->enterPin(QOfonoSimManager::SimPin, pinCode);
 
         } else if (m_pinType == QString("puk")) {
             m_pinType = QString("newpin");
@@ -117,7 +120,7 @@ void OfonoSimIf::enterPin(QString pinCode)
 
         } else if (m_pinType == QString("confirm")) {
             if (m_pukInfo.m_newpin == pinCode) {
-                m_simManager->resetPin(QString("puk"), m_pukInfo.m_puk, pinCode);
+                m_simManager->resetPin(QOfonoSimManager::SimPuk, m_pukInfo.m_puk, pinCode);
             } else {
                 // change from confirm to puk
                 m_pinType = QString("puk");
@@ -145,32 +148,28 @@ QString OfonoSimIf::pinType()
     return m_pinType;
 }
 
-void OfonoSimIf::enterPinComplete(bool success)
+void OfonoSimIf::enterPinComplete(QOfonoSimManager::Error error, const QString &errorString)
 {
     qDebug() << QString("-->OfonoSimIf::enterPinComplete");
 
-    if (success) {
+    if (error == QOfonoSimManager::NoError) {
         emit pinOk();
     } else {
         // TODO: remove when retries are received from ofono-qt
         if (m_attemptsLeft > 0) {
             m_attemptsLeft--;
         }
-
         emit pinFailed(m_attemptsLeft);
-
-        qDebug() << m_simManager->errorName();
-        qDebug() << m_simManager->errorMessage();
     }
 
     qDebug() << QString("<--OfonoSimIf::enterPinComplete");
 }
 
-void OfonoSimIf::resetPinComplete(bool success)
+void OfonoSimIf::resetPinComplete(QOfonoSimManager::Error error, const QString &errorString)
 {
     qDebug() << QString("-->OfonoSimIf::resetPinComplete");
 
-    if (success) {
+    if (error == QOfonoSimManager::NoError) {
         emit pinOk();
     } else {
         // TODO: remove when retries are received from ofono-qt
@@ -181,25 +180,22 @@ void OfonoSimIf::resetPinComplete(bool success)
         // change from confirm to puk
         m_pinType = QString("puk");
         emit pinTypeChanged(m_pinType);
-
         emit pinFailed(m_attemptsLeft);
-        qDebug() << m_simManager->errorName();
-        qDebug() << m_simManager->errorMessage();
     }
 
     qDebug() << QString("<--OfonoSimIf::resetPinComplete");
 }
 
-void OfonoSimIf::pinRequiredChanged(const QString &pinType)
+void OfonoSimIf::pinRequiredChanged(int pinType)
 {
     qDebug() << QString("-->OfonoSimIf::pinRequiredChanged");
 
-    if (pinType == QString("pin")) {
+    if (pinType == QOfonoSimManager::SimPin) {
         m_pinRequired = true;
         m_pinType = pinType;
         m_attemptsLeft = RETRIES_PIN;
         qDebug() << QString("OfonoSimIf::pinRequiredChanged: pin");
-    } else if (pinType == QString("puk")) {
+    } else if (pinType == QOfonoSimManager::SimPuk) {
         m_pinRequired = true;
         m_pinType = pinType;
         m_attemptsLeft = RETRIES_PUK;

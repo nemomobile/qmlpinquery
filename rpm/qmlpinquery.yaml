@@ -21,7 +21,7 @@ PkgConfigBR:
      - Qt5Qml
      - Qt5Quick
      - Qt5DBus
-     - ofono-qt
+     - qofono-qt5
 Requires : 
      - qt-components-qt5
 Configure: none  
