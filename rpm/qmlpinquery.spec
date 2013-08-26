@@ -18,6 +18,7 @@ Source0:    %{name}-%{version}.tar.bz2
 Source1:    qmlpinquery.service
 Source100:  qmlpinquery.yaml
 Requires:   qt-components-qt5
+Requires:   mapplauncherd-booster-qtcomponents-qt5
 BuildRequires:  pkgconfig(qdeclarative5-boostable)
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
